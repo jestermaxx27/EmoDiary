@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import React, { useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -12,9 +12,10 @@ import { Calendar, TrendingUp, Heart, PenTool, BarChart3, Smile, Target, Clock, 
 interface DashboardProps {
   entries: JournalEntry[]
   onNavigate: (view: "write" | "history" | "trends") => void
+  userName?: string
 }
 
-export function Dashboard({ entries, onNavigate }: DashboardProps) {
+export function Dashboard({ entries, onNavigate, userName }: DashboardProps) {
   const stats = useMemo(() => {
     const analyzedEntries = entries.filter((entry) => entry.emotionAnalysis)
     const recentEntries = entries.slice(0, 7) // Last 7 entries
@@ -62,7 +63,7 @@ export function Dashboard({ entries, onNavigate }: DashboardProps) {
     if (score >= 80) return { message: "You're doing amazing!", color: "text-green-600" }
     if (score >= 60) return { message: "You're on a good path", color: "text-blue-600" }
     if (score >= 40) return { message: "Keep nurturing yourself", color: "text-yellow-600" }
-    return { message: "Be gentle with yourself", color: "text-orange-600" }
+    return { message: "Stay calm and composed.", color: "text-orange-600" }
   }
 
   const wellbeingMessage = getWellbeingMessage(stats.wellbeingScore)
@@ -74,10 +75,12 @@ export function Dashboard({ entries, onNavigate }: DashboardProps) {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-amber-900 mb-2">Welcome back to your journey</h2>
+              <h2 className="text-2xl font-bold text-amber-900 mb-2">
+                Welcome back to your journey{userName ? `, ${userName}` : ""}!
+              </h2>
               <p className="text-amber-700">
                 {stats.totalEntries === 0
-                  ? "Ready to start your emotional wellness journey?"
+                  ? "How are we feeling today?"
                   : `You've written ${stats.totalEntries} entries and analyzed ${stats.analyzedEntries} of them.`}
               </p>
             </div>

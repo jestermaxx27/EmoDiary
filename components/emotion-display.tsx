@@ -13,6 +13,7 @@ interface EmotionDisplayProps {
 }
 
 export function EmotionDisplay({ analysis }: EmotionDisplayProps) {
+  console.log('EmotionDisplay analysis:', analysis);
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment) {
       case "positive":
@@ -120,14 +121,27 @@ export function EmotionDisplay({ analysis }: EmotionDisplayProps) {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {analysis.suggestions.map((suggestion, index) => (
-              <div key={index} className="flex gap-3 rounded-lg bg-white/60 p-3 border border-green-200">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 text-xs font-medium text-green-700">
-                  {index + 1}
+            {analysis.suggestions.map((suggestion, index) => {
+              // suggestions may be strings or objects like { text, category }
+              const text = typeof suggestion === "string" ? suggestion : suggestion?.text ?? JSON.stringify(suggestion)
+              const category = typeof suggestion === "object" ? (suggestion as any)?.category : undefined
+
+              return (
+                <div key={index} className="flex gap-3 rounded-lg bg-white/60 p-3 border border-green-200">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 text-xs font-medium text-green-700">
+                    {index + 1}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-green-800">{text}</p>
+                    {category && (
+                      <div className="mt-2">
+                        <Badge className="uppercase text-xs">{category}</Badge>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <p className="text-sm text-green-800">{suggestion}</p>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </CardContent>
       </Card>

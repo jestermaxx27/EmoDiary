@@ -114,9 +114,11 @@ const categoryColors = {
   "self-care": "bg-pink-100 text-pink-800 border-pink-200",
 }
 
+type CategoryType = keyof typeof categoryColors
+
 export function MoodImprovementToolkit({ primaryEmotion, sentiment, intensity }: MoodImprovementToolkitProps) {
   const [completedActivities, setCompletedActivities] = useState<Set<string>>(new Set())
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null)
 
   // Filter activities based on emotion and sentiment
   const recommendedActivities = activities.filter((activity) => {
@@ -138,7 +140,7 @@ export function MoodImprovementToolkit({ primaryEmotion, sentiment, intensity }:
     setCompletedActivities((prev) => new Set([...prev, activityId]))
   }
 
-  const categories = Array.from(new Set(recommendedActivities.map((activity) => activity.category)))
+  const categories: CategoryType[] = Array.from(new Set(recommendedActivities.map((activity) => activity.category))) as CategoryType[]
 
   return (
     <Card className="border-indigo-200 bg-indigo-50/50">
@@ -196,7 +198,7 @@ export function MoodImprovementToolkit({ primaryEmotion, sentiment, intensity }:
                       <h4 className="font-medium text-sm">{activity.title}</h4>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge className={categoryColors[activity.category]} variant="outline">
+                      <Badge className={categoryColors[activity.category as CategoryType]} variant="outline">
                         {activity.category}
                       </Badge>
                       <span className="text-xs text-muted-foreground">{activity.duration}</span>
@@ -235,8 +237,8 @@ export function MoodImprovementToolkit({ primaryEmotion, sentiment, intensity }:
                 <span className="font-medium text-green-800">Great Progress!</span>
               </div>
               <p className="text-sm text-green-700">
-                You've completed {completedActivities.size} wellness activit
-                {completedActivities.size === 1 ? "y" : "ies"} today. Keep nurturing your wellbeing!
+                You've completed {completedActivities.size} wellness activity
+                {completedActivities.size === 1 ? "" : "ies"} today. Keep nurturing your wellbeing!
               </p>
             </CardContent>
           </Card>

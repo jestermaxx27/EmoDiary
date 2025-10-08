@@ -21,7 +21,7 @@ export interface EmotionAnalysis {
   }>
   sentiment: "positive" | "negative" | "neutral"
   intensity: "low" | "medium" | "high"
-  suggestions: string[]
+  suggestions: Array<string | { text: string; category?: string }>
 }
 
 export const emotionColors: Record<EmotionType, string> = {

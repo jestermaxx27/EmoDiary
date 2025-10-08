@@ -71,7 +71,12 @@ export function JournalEntry({ onSave }: JournalEntryProps) {
           </CardContent>
         </Card>
 
-        {savedEntry.emotionAnalysis && <EmotionDisplay analysis={savedEntry.emotionAnalysis} />}
+        {Array.isArray(savedEntry.emotionAnalysis)
+          ? savedEntry.emotionAnalysis.map((analysis, idx) => (
+              <EmotionDisplay key={idx} analysis={analysis} />
+            ))
+          : savedEntry.emotionAnalysis ? <EmotionDisplay analysis={savedEntry.emotionAnalysis} /> : null
+        }
       </div>
     )
   }

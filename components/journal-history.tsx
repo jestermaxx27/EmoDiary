@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { EmotionDisplay } from "@/components/emotion-display"
+import { JournalStorage } from "@/lib/journal-storage"
 import type { JournalEntry } from "@/lib/journal-storage"
 import { emotionColors, emotionEmojis } from "@/lib/emotions"
 import { Calendar, TrendingUp, Eye, EyeOff } from "lucide-react"
@@ -12,9 +13,10 @@ import { Calendar, TrendingUp, Eye, EyeOff } from "lucide-react"
 interface JournalHistoryProps {
   entries: JournalEntry[]
   onUpdateEntry: (id: string, updates: Partial<JournalEntry>) => void
+  onDeleteEntry: (id: string) => void // <-- Add this line
 }
 
-export function JournalHistory({ entries, onUpdateEntry }: JournalHistoryProps) {
+export function JournalHistory({ entries, onUpdateEntry, onDeleteEntry }: JournalHistoryProps) {
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null)
   const [filter, setFilter] = useState<"all" | "analyzed" | "unanalyzed">("all")
 
@@ -131,14 +133,24 @@ export function JournalHistory({ entries, onUpdateEntry }: JournalHistoryProps) 
                   </div>
                   <p className="text-sm text-amber-700">{formatDate(entry.createdAt)}</p>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => toggleExpanded(entry.id)}
-                  className="text-amber-700 hover:text-amber-900"
-                >
-                  {expandedEntry === entry.id ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => toggleExpanded(entry.id)}
+                    className="text-amber-700 hover:text-amber-900"
+                  >
+                    {expandedEntry === entry.id ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onDeleteEntry(entry.id)}
+                    className="text-red-600 border-red-300 hover:bg-red-50"
+                  >
+                    Delete
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent>

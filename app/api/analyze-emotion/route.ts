@@ -10,8 +10,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Text is required and must be a string" }, { status: 400 })
     }
 
+    // Get API key from environment
+    const apiKey = process.env.GROQ_API_KEY
+    if (!apiKey) {
+      return NextResponse.json({ error: "Groq API key is missing" }, { status: 500 })
+    }
+
     const { text: response } = await generateText({
-      model: groq("llama3-70b-8192"),
+  model: groq("llama-3.1-8b-instant"), // Pass only the model name
       prompt: `Analyze the emotional content of this journal entry and provide detailed insights in JSON format:
 
 "${text}"
