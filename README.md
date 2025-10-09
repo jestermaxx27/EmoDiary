@@ -5,8 +5,6 @@ actionable improvement tips.
 
 Badges
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/adityar2005business-3345s-projects/v0-journal-with-mood-detection)
-
 Overview
 
 EmoDiary is a Next.js + TypeScript application that helps users capture journal entries and get
