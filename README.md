@@ -3,7 +3,6 @@
 AI-powered personal journaling app that analyzes mood from text, tracks emotional trends, and provides
 actionable improvement tips.
 
-Badges
 
 Overview
 
