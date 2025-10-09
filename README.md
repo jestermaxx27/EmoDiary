@@ -1,8 +1,53 @@
 ﻿# EmoDiary
+AI-powered personal journaling web app that analyzes free-text journal entries, surfaces mood trends,
+and provides evidence-based improvement suggestions.
 
-AI-powered personal journaling app that analyzes mood from text, tracks emotional trends, and provides
-actionable improvement tips.
+Project snapshot
+----------------
 
+- Role: Full-stack developer (design, implementation, and deployment)
+- Stack: Next.js (App Router) · TypeScript · React · Prisma · Node.js · Git
+- Repository: https://github.com/aditya-r-0027/EmoDiary
+
+One-line description
+--------------------
+
+EmoDiary uses server-side AI analysis to extract emotion metadata from journal entries, stores structured
+results with Prisma, and visualizes emotional trends in a responsive, accessible UI.
+
+Key responsibilities / accomplishments
+------------------------------------
+
+- Designed and implemented the Next.js application architecture, App Router routes, and server API for
+	emotion analysis.
+- Built reusable React components for journal entry input, emotion display, and trends visualization.
+- Integrated Prisma with a relational schema and migrations for reliable storage of entries and users.
+- Implemented authentication and secure server-side handlers to keep user data private.
+- Managed full Git workflow, prepared the project for deployment, and maintained a clean, documented
+	repository suitable for demos and interviews.
+
+Selected technical highlights
+-----------------------------
+
+- Server API: `app/api/analyze-emotion/route.ts` — performs AI-backed analysis and returns structured
+	emotion tags and confidence scores.
+- Components: `components/emotion-display.tsx`, `components/emotion-trends.tsx`, `components/journal-history.tsx`.
+- Persistence: `prisma/schema.prisma` (entries, users) + Prisma Client usage in server routes.
+- Tooling: TypeScript types, linting scripts, and package management via pnpm/npm.
+
+How to reference this project on a resume
+----------------------------------------
+
+EmoDiary — AI-powered journaling web app (Next.js, TypeScript, Prisma). Implemented end-to-end emotion
+analysis, secure data storage, and trends visualization; prepared and deployed repository for demo and
+interview use.
+
+Contact / Demo
+--------------
+
+View the code: https://github.com/aditya-r-0027/EmoDiary
+
+If you want, I can add a short demo GIF or a single-line usage example for the repo landing page.
 
 Overview
 
