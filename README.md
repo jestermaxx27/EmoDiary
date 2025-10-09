@@ -95,24 +95,3 @@ Security
 License
 
 This repository does not include a license file. Add a `LICENSE` file (for example MIT) if you want to
-make the project open source.
-
-Where to look
-
-- `app/` — Next.js app routes, pages, and API endpoints (see `app/api/analyze-emotion/route.ts`)
-- `components/` — UI components like `emotion-trends.tsx`, `journal-history.tsx`, and `emotion-display.tsx`
-- `lib/` — helpers for auth, journal storage, and prisma utilities
-- `prisma/schema.prisma` — database schema
-
-Contact / support
-
-If you'd like, I can help:
-
-- Add badges for CI and code coverage
-- Create a `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md`
-- Add GitHub Actions for linting and tests
-
----
-
-If you'd like any section expanded, or prefer a shorter landing README for GitHub, tell me which tone
-you prefer (concise, developer-focused, or marketing-focused) and I'll update it.
