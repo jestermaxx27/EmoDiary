@@ -7,6 +7,7 @@ import type { JournalEntry } from "@/lib/journal-storage"
 import type { EmotionType } from "@/lib/emotions"
 import { emotionColors, emotionEmojis } from "@/lib/emotions"
 import { BarChart3, Calendar, Heart } from "lucide-react"
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
 
 interface EmotionTrendsProps {
   entries: JournalEntry[]
@@ -58,6 +59,53 @@ export function EmotionTrends({ entries }: EmotionTrendsProps) {
     const positiveCount = recent.filter((entry) => entry.emotionAnalysis?.sentiment === "positive").length
     const total = recent.length
     return total > 0 ? Math.round((positiveCount / total) * 100) : 0
+  }, [analyzedEntries])
+
+  const emotionChartData = useMemo(() => {
+    return emotionStats.map(([emotion, count]) => ({
+      name: emotion.charAt(0).toUpperCase() + emotion.slice(1),
+      count,
+      emotion: emotion as EmotionType,
+    }))
+  }, [emotionStats])
+
+  const sentimentChartData = useMemo(() => {
+    return [
+      { name: "Positive", value: sentimentStats.positive, color: "#22c55e" },
+      { name: "Neutral", value: sentimentStats.neutral, color: "#9ca3af" },
+      { name: "Negative", value: sentimentStats.negative, color: "#ef4444" },
+    ].filter((item) => item.value > 0)
+  }, [sentimentStats])
+
+  const timelineData = useMemo(() => {
+    const data: Array<{ date: string; positive: number; negative: number; neutral: number }> = []
+    const sortedEntries = [...analyzedEntries].reverse()
+
+    sortedEntries.forEach((entry, index) => {
+      if (entry.emotionAnalysis) {
+        const date = new Date(entry.timestamp).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })
+
+        const existing = data.find((d) => d.date === date)
+
+        if (existing) {
+          if (entry.emotionAnalysis.sentiment === "positive") existing.positive++
+          else if (entry.emotionAnalysis.sentiment === "negative") existing.negative++
+          else existing.neutral++
+        } else {
+          data.push({
+            date,
+            positive: entry.emotionAnalysis.sentiment === "positive" ? 1 : 0,
+            negative: entry.emotionAnalysis.sentiment === "negative" ? 1 : 0,
+            neutral: entry.emotionAnalysis.sentiment === "neutral" ? 1 : 0,
+          })
+        }
+      }
+    })
+
+    return data.slice(-7)
   }, [analyzedEntries])
 
   if (analyzedEntries.length === 0) {
@@ -123,6 +171,61 @@ export function EmotionTrends({ entries }: EmotionTrendsProps) {
         </CardContent>
       </Card>
 
+      {/* Emotion Distribution Bar Chart */}
+      {emotionChartData.length > 0 && (
+        <Card className="border-indigo-200 bg-indigo-50/50">
+          <CardHeader>
+            <CardTitle className="text-indigo-900">Emotion Distribution</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={emotionChartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e0e7ff" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #e0e7ff",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Bar dataKey="count" fill="#6366f1" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Sentiment Timeline */}
+      {timelineData.length > 0 && (
+        <Card className="border-cyan-200 bg-cyan-50/50">
+          <CardHeader>
+            <CardTitle className="text-cyan-900">Sentiment Over Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={timelineData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#cffafe" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #cffafe",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Legend />
+                <Line type="monotone" dataKey="positive" stroke="#22c55e" strokeWidth={2} name="Positive" />
+                <Line type="monotone" dataKey="neutral" stroke="#9ca3af" strokeWidth={2} name="Neutral" />
+                <Line type="monotone" dataKey="negative" stroke="#ef4444" strokeWidth={2} name="Negative" />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Sentiment Distribution */}
       <Card className="border-purple-200 bg-purple-50/50">
         <CardHeader>
@@ -131,7 +234,7 @@ export function EmotionTrends({ entries }: EmotionTrendsProps) {
             <CardTitle className="text-purple-900">Overall Sentiment</CardTitle>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           <div className="grid grid-cols-3 gap-4 text-center">
             <div className="rounded-lg bg-green-100 p-3">
               <div className="text-2xl font-bold text-green-800">{sentimentStats.positive}</div>
@@ -146,6 +249,28 @@ export function EmotionTrends({ entries }: EmotionTrendsProps) {
               <div className="text-sm text-red-700">Negative</div>
             </div>
           </div>
+
+          {sentimentChartData.length > 0 && (
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={sentimentChartData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, value }) => `${name}: ${value}`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {sentimentChartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          )}
         </CardContent>
       </Card>
     </div>
